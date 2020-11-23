@@ -1,0 +1,12 @@
+{
+  "name": "eshop_app",
+  "version": "1.0.0",
+  "description": "Eshop on Docker",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "mysql": "^2.18.1"
+  }
+}

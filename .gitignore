@@ -1,0 +1,3 @@
+*.sql
+*.txt
+/node_modules
