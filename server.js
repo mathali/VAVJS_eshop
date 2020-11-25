@@ -1,5 +1,7 @@
 const mysql = require('mysql');
 const express = require('express');
+const session = require('express-session');
+const cookieParser = require('cookie-parser');
 const app = express();
 const bodyParser = require('body-parser');
 
@@ -7,10 +9,48 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 
 app.use(express.static('public'));
+var sessionParser = require('express-session')({
+	secret:"secret",
+    resave: true,
+	saveUninitialized: true,
+	cookie: { secure: false },
+});
+app.use(cookieParser('your secret here'));
+app.use(session(sessionParser));
 
 app.listen(8080, ()=>{
     console.log("[INFO] Listening");
 })
+
+app.get('/product_data', (req, res) =>{
+    connection.query('SELECT * FROM products', function (error, results, fields) {
+        if (error) throw error;
+        console.log(JSON.stringify(results));
+        res.json(results);
+    });
+});
+
+app.post('/to_cart', (req, res)=>{
+    var in_cart = false;
+    if (req.session.items === undefined) {
+        req.session.items = [];
+    }else{
+        for(var i = 0; i < req.session.items.length; i++){
+            if(req.session.items[i].key == req.body['title']){
+                req.session.items[i].amount += 1;
+                in_cart = true;
+                break;
+            }
+        }
+    }
+    if(!in_cart){
+        req.session.items.push({
+            key: req.body['title'],
+            amount: 1,
+        });
+    }
+    res.send('OK');
+});
 
 /*app.get('/index.html', function(req, res){
     res.sendFile(__dirname+"/index.html");
@@ -70,19 +110,19 @@ var createCounter = `CREATE TABLE \`counter\` (
 //seed
 var products = [
     {
-        name: 'test1',
-        cost: '100.0',
-        image_src: 'fiit.stuba.sk'
+        name: 'Digital Cherries',
+        cost: '60.0',
+        image_src: 'https://live.staticflickr.com/5088/5298033534_7728d6e608_b.jpg'
     },
     {
-        name: 'test2',
-        cost: '200.0',
-        image_src: 'fiit.stuba.sk'
+        name: 'Battle for the Galaxy',
+        cost: '70.0',
+        image_src: 'https://upload.wikimedia.org/wikipedia/commons/4/4f/Battle_for_the_Galaxy%2C_video_game_logo_screen.png'
     },
     {
-        name: 'test3',
-        cost: '300.0',
-        image_src: 'fiit.stuba.sk'
+        name: 'GTA',
+        cost: '80.0',
+        image_src: 'https://live.staticflickr.com/2210/2272200180_bfdf7d6b43_b.jpg'
     },
 ];
 
@@ -156,7 +196,7 @@ queryPromise(customersTest).then(res =>{
                 queryPromise(strCtr);
             };
     }).then(res=>{
-        connection.end();
+        //connection.end();     //TODO: figure out where to place it
         });
     }) 
     
