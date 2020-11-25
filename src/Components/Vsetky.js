@@ -11,7 +11,9 @@ class Vsetky extends React.Component  {
             isLoaded: false,
             items: [],
             isCart: false,
+            dontRender: [],
         };
+        this.unmountChild = this.unmountChild.bind(this);
     }
 
     getProducts(){    
@@ -49,12 +51,33 @@ class Vsetky extends React.Component  {
 
     renderItems(){
         return this.state.items.map((item,index)=>{
+            for(var i = 0; i < this.state.dontRender.length; i++){
+                if(this.state.dontRender[i] == item.title) return null; //TODO: bind the reverse to Add to cart btn
+            }
             return <Item
                 key={index}
                 title={item.title}
                 amount={item.amount}
-                total_cost={item.total_cost}/>
+                total_cost={item.total_cost}
+                unmountChild={this.unmountChild}/>
         });
+    }
+
+    unmountChild(title){
+        var flag;
+        if(this.state.dontRender != undefined){
+            var ph = this.state.dontRender;
+            for(var i = 0; i < ph.length; i++){
+                if(ph[i] == title){
+                    flag=true;
+                }
+            }
+            if(!flag)ph.push(title);
+            this.setState({dontRender: ph});
+        }else{
+            this.setState({dontRender: [title]});
+        }
+        console.log(this.state.dontRender);
     }
 
 

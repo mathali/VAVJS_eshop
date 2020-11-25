@@ -52,7 +52,7 @@ class Item extends React.Component {
             <h3>{this.state.amount * this.state.total_cost}€</h3>
         </div>
         <div className="remove_item_btn">
-            <button>X</button>
+            <button onClick={()=>this.props.unmountChild(this.state.title)}>X</button>
         </div>
       </div>
     );
