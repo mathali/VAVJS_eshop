@@ -25,9 +25,32 @@ app.listen(8080, ()=>{
 app.get('/product_data', (req, res) =>{
     connection.query('SELECT * FROM products', function (error, results, fields) {
         if (error) throw error;
-        console.log(JSON.stringify(results));
         res.json(results);
     });
+});
+
+app.get('/cart_data', (req, res) =>{
+    var output = [];
+    if(req.session.items != undefined){
+        connection.query('SELECT * FROM products', function (error, results, fields) {
+            if (error) throw error;
+            for(var i = 0; i < req.session.items.length; i++){
+                for(var j = 0; j < results.length; j++){
+                    if(req.session.items[i].key == results[j].name){
+                        output.push({
+                            title: req.session.items[i].key,
+                            amount: req.session.items[i].amount,
+                            total_cost: req.session.items[i].amount * results[j].cost,
+                        })
+                        break;
+                    }
+                }
+            }
+            res.json(output);
+        });
+    }else{
+        res.send('[Err] Cart is empty');
+    }
 });
 
 app.post('/to_cart', (req, res)=>{
