@@ -14,23 +14,15 @@ class Item extends React.Component {
       if(this.state.amount - 1 < 0) return;
       this.setState({
             title: this.props.title,
-            //total_cost: (this.state.total_cost/this.state.amount) * (this.state.amount-1),
             amount: this.state.amount - 1,
       });
-      /*this.state.total_cost = this.state.total_cost/this.state.amount * (this.state.amount-1);
-      this.state.amount -= 1;
-      this.render();*/
   }
 
   increaseAmount(){
       this.setState({
             title: this.props.title,
-            //total_cost:( this.state.total_cost/this.state.amount) * (this.state.amount+1),
             amount: this.state.amount + 1,
       });
-      /*this.state.total_cost = this.state.total_cost/this.state.amount * (this.state.amount+1);
-      this.state.amount += 1;
-      this.render();*/
   }
 
   render() {

@@ -55,3 +55,9 @@
   width: 2%;
   float: left;
 }
+
+.form{
+  width: 40%;
+  margin-left: auto;
+  margin-right: auto;
+}
