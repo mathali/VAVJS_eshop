@@ -6,7 +6,7 @@ class Item extends React.Component {
         this.state = {
             title: this.props.title,
             amount: this.props.amount,
-            total_cost: this.props.total_cost,
+            cost: this.props.cost,
         };
     }
 
@@ -49,7 +49,7 @@ class Item extends React.Component {
             <button>+</button>
         </div>
         <div className="item_total_cost">
-            <h3>{this.state.amount * this.state.total_cost}€</h3>
+            <h3>{this.state.amount * this.state.cost}€</h3>
         </div>
         <div className="remove_item_btn">
             <button onClick={()=>this.props.unmountChild(this.state.title)}>X</button>

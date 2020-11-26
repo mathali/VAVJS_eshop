@@ -21,6 +21,7 @@ class Product extends React.Component {
   }
 
   handleClick(title) {
+    this.props.remount(title);
     fetch('/to_cart',{
           method: 'POST',
           headers: {

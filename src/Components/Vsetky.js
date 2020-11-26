@@ -14,6 +14,7 @@ class Vsetky extends React.Component  {
             dontRender: [],
         };
         this.unmountChild = this.unmountChild.bind(this);
+        this.remountChild = this.remountChild.bind(this);
     }
 
     getProducts(){    
@@ -33,13 +34,21 @@ class Vsetky extends React.Component  {
                 key={product.id}
                 title={product.name}
                 cost={product.cost}
-                image={product.image_src} />
+                image={product.image_src}
+                remount = {this.remountChild} />
         });
     }
 
     getCart(){
         fetch('/cart_data')
             .then(res => res.json())
+            .catch(error=>{
+                console.log("[INFO] Empty Cart");
+                this.setState({
+                    items: [],
+                    isCart: true,
+                })
+            })
             .then(data => {
                 this.setState({
                     items: data,
@@ -50,15 +59,16 @@ class Vsetky extends React.Component  {
 
 
     renderItems(){
+        if(this.state.items == undefined || this.state.items.length < 1) return null;
         return this.state.items.map((item,index)=>{
             for(var i = 0; i < this.state.dontRender.length; i++){
-                if(this.state.dontRender[i] == item.title) return null; //TODO: bind the reverse to Add to cart btn
+                if(this.state.dontRender[i] == item.title) return null;
             }
             return <Item
                 key={index}
                 title={item.title}
                 amount={item.amount}
-                total_cost={item.total_cost}
+                cost={item.cost}
                 unmountChild={this.unmountChild}/>
         });
     }
@@ -77,9 +87,20 @@ class Vsetky extends React.Component  {
         }else{
             this.setState({dontRender: [title]});
         }
-        console.log(this.state.dontRender);
     }
 
+    remountChild(title){
+        console.log(title);
+        if(this.state != undefined && this.state.dontRender != undefined){
+            var ph = this.state.dontRender;
+            for(var i = 0; i < ph.length; i++){
+                if(ph[i] == title){
+                    ph.splice(i, 1);
+                }
+            }
+            this.setState({dontRender: ph});
+        }
+    }
 
     render(){
         if(!this.state.isLoaded)this.getProducts();

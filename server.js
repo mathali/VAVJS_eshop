@@ -40,7 +40,7 @@ app.get('/cart_data', (req, res) =>{
                         output.push({
                             title: req.session.items[i].key,
                             amount: req.session.items[i].amount,
-                            total_cost: req.session.items[i].amount * results[j].cost,
+                            cost: results[j].cost,
                         })
                         break;
                     }
