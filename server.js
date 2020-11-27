@@ -98,7 +98,7 @@ app.post('/create_order', (req,res)=>{
             for(var i = 0; i < req.body['order'].length; i++){
                 selectPromise('SELECT id FROM products WHERE name=\''+req.body['order'][i].title+'\'').then(res=>{
                     connection.query('INSERT INTO orders (amount, customer_key, product_key, state) VALUES ' + 
-                        '(\''+ req.body['order'][amount_order++].amount + '\', \'' + cust_id + '\', \'' + res[0].id + '\', \' Awainting payment\')', 
+                        '(\''+ req.body['order'][amount_order++].amount + '\', \'' + cust_id + '\', \'' + res[0].id + '\', \' Awaiting payment\')', 
                             function(error,results,fields){
                                 if(error) throw error;
                         }
@@ -110,9 +110,11 @@ app.post('/create_order', (req,res)=>{
     res.send('OK')
 })
 
-/*app.get('/index.html', function(req, res){
-    res.sendFile(__dirname+"/index.html");
-});*/
+app.post('/update_counter', (res,req)=>{
+    connection.query('UPDATE counter SET hit_count = hit_count + 1 WHERE id=1', function(error,results,fields){
+                if(error) throw error;
+            });
+})
 
 var connection = mysql.createConnection({
     host : 'mydb',      // lebo docker

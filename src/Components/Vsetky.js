@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import Product from './Product';
 import Item from './Item';
 import Form from './Form';
+import Thank_you from './Thank_you';
 
 class Vsetky extends React.Component  {
     constructor(props) {
@@ -15,6 +16,7 @@ class Vsetky extends React.Component  {
             dontRender: [],
             isForm: false,
             sum: 0,
+            isThanks: false,
         };
         this.unmountChild = this.unmountChild.bind(this);
         this.remountChild = this.remountChild.bind(this);
@@ -44,6 +46,10 @@ class Vsetky extends React.Component  {
         });
     }
 
+    renderThankYou(){
+         return <Thank_you/>
+    }
+
     getCart(){
         fetch('/cart_data')
             .then(res => res.json())
@@ -63,8 +69,6 @@ class Vsetky extends React.Component  {
     }
 
     createOrder(customer){
-        console.log(customer);
-        console.log(this.state.order);
         fetch('/create_order',{
           method: 'POST',
           headers: {
@@ -76,6 +80,10 @@ class Vsetky extends React.Component  {
             }),
           credentials: 'same-origin'
       });
+      this.setState({
+            isForm: false,
+            isThanks: true
+        });
     }
 
     renderItems(){
@@ -186,7 +194,7 @@ class Vsetky extends React.Component  {
                 </div>
             );
         }
-        else if (this.state.isCart && !this.state.isForm){
+        else if (this.state.isCart && !this.state.isForm && !this.state.isThanks){
             return (
                 <div className = 'cart_page'>
                     <div className="home_btn">
@@ -219,7 +227,7 @@ class Vsetky extends React.Component  {
                 </div>
             );
         }
-        else if(this.state.isForm){
+        else if(this.state.isForm && !this.state.isThanks){
             return(
                 <div className="Form_page">
                     <div className="home_btn">
@@ -239,6 +247,27 @@ class Vsetky extends React.Component  {
                     <div className="Order_form">{this.renderForm()}</div>
                 </div>
             );
+        }else if(this.state.isThanks){
+            return(
+                <div className="Thanks_page">
+                    <div className="home_btn">
+                        <img src="https://img.icons8.com/metro/26/000000/home.png"  alt="Home" width='50px' height='50px'
+                            onClick={()=>this.setState({
+                            isCart: false,
+                            isForm: false,
+                            isThanks: false,
+                        })}/>
+                    </div>
+                    <div className="cart_btn">
+                        <img src="https://img.icons8.com/ios-filled/50/000000/shopping-basket-2.png" alt="Cart" width='50px' height='50px' padding-left='50px'
+                            onClick={()=>this.setState({
+                                isForm: false,
+                                isThanks: false
+                            })}/>
+                    </div>
+                    <div className="Order_form">{this.renderThankYou()}</div>
+                </div>
+            )
         }
         else{
             return <div>Loading...</div>
