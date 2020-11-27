@@ -10,6 +10,20 @@ class Form extends React.Component {
         };*/
     }
 
+  createOrder(){
+    var customer = {
+        name: document.getElementById("name").value,
+        phone_no: document.getElementById("phone_no").value,
+        email: document.getElementById("email").value,
+        street: document.getElementById("street").value,
+        city: document.getElementById("city").value,
+        country: document.getElementById("country").value,
+        postcode: document.getElementById("postcode").value
+    };
+
+    this.props.createOrder(customer);
+  }  
+
   render() {
     return (
       <div className="form_div">
@@ -28,8 +42,10 @@ class Form extends React.Component {
             <input type="text" id="country"/><br/>
             <label>Postcode</label><br/>
             <input type="text" id="postcode"/><br/>
-            <button>Order</button>
         </form>
+        <div className="create_order_btn">
+            <button id="create_btn" onClick={()=>this.createOrder()}>Order</button>
+        </div>
       </div>
     );
   }

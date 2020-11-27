@@ -12,6 +12,7 @@ class Item extends React.Component {
 
   decreaseAmount(){
       if(this.state.amount - 1 < 0) return;
+      this.props.updateAmount(this.state.title, this.state.amount-1);
       this.setState({
             title: this.props.title,
             amount: this.state.amount - 1,
@@ -19,6 +20,7 @@ class Item extends React.Component {
   }
 
   increaseAmount(){
+      this.props.updateAmount(this.state.title, this.state.amount+1);
       this.setState({
             title: this.props.title,
             amount: this.state.amount + 1,

@@ -18,6 +18,8 @@ class Vsetky extends React.Component  {
         };
         this.unmountChild = this.unmountChild.bind(this);
         this.remountChild = this.remountChild.bind(this);
+        this.updateAmount = this.updateAmount.bind(this);
+        this.createOrder = this.createOrder.bind(this);
     }
 
     getProducts(){    
@@ -60,6 +62,21 @@ class Vsetky extends React.Component  {
             });
     }
 
+    createOrder(customer){
+        console.log(customer);
+        console.log(this.state.order);
+        fetch('/create_order',{
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+                customer: customer,
+                order: this.state.order
+            }),
+          credentials: 'same-origin'
+      });
+    }
 
     renderItems(){
         if(this.state.items == undefined || this.state.items.length < 1) return null;
@@ -72,12 +89,14 @@ class Vsetky extends React.Component  {
                 title={item.title}
                 amount={item.amount}
                 cost={item.cost}
-                unmountChild={this.unmountChild}/>
+                unmountChild={this.unmountChild}
+                updateAmount={this.updateAmount}/>
         });
     }
 
     renderForm(){
-        return <Form/>;
+        return <Form
+            createOrder={this.createOrder}/>;
     }
 
     unmountChild(title){
@@ -96,8 +115,18 @@ class Vsetky extends React.Component  {
         }
     }
 
+    updateAmount(title, amount){
+        var ph = this.state.items;
+        for(var i = 0; i < ph.length; i++){
+            if(ph[i].title == title){
+                ph[i].amount = amount;
+                break;
+            }
+        }
+        this.setState({items: ph});
+    }
+
     remountChild(title){
-        console.log(title);
         if(this.state != undefined && this.state.dontRender != undefined){
             var ph = this.state.dontRender;
             for(var i = 0; i < ph.length; i++){
@@ -119,14 +148,14 @@ class Vsetky extends React.Component  {
             for(var i = 0; i < this.state.items.length; i++){
                 if(this.state.dontRender != undefined){
                     for(var j = 0; j < this.state.dontRender.length; j++){
-                        if(this.state.dontRender[i].title == this.state.items[i].title){
+                        if(this.state.dontRender[j] == this.state.items[i].title){
                             toRemove.push(i);
                         }
                     }
                 }
             }
             if(toRemove.length > 0){
-                for(var i = toRemove.length; i >= 0; i--){
+                for(var i = toRemove.length-1; i >= 0; i--){
                     ph_order.splice(toRemove[i], 1);
                 }
             }
@@ -197,10 +226,12 @@ class Vsetky extends React.Component  {
                         <img src="https://img.icons8.com/metro/26/000000/home.png"  alt="Home" width='50px' height='50px'
                             onClick={()=>this.setState({
                             isCart: false,
+                            isForm: false,
                         })}/>
                     </div>
                     <div className="cart_btn">
-                        <img src="https://img.icons8.com/ios-filled/50/000000/shopping-basket-2.png" alt="Cart" width='50px' height='50px' padding-left='50px'/>
+                        <img src="https://img.icons8.com/ios-filled/50/000000/shopping-basket-2.png" alt="Cart" width='50px' height='50px' padding-left='50px'
+                            onClick={()=>this.setState({isForm: false})}/>
                     </div>
                     <div className="order_total">
                         <h3>Total sum: {this.state.sum}€</h3>

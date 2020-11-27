@@ -75,6 +75,41 @@ app.post('/to_cart', (req, res)=>{
     res.send('OK');
 });
 
+app.post('/create_order', (req,res)=>{
+    var cust_id;
+    var order_id = [];
+    if(req.body['order'] != undefined && req.body['order'].length > 0){
+        queryPromise('SELECT * FROM customers WHERE name=\''+req.body['customer'].name+'\'').then(res=>{
+            if(res){
+                connection.query('INSERT INTO customers (name, phone_no, email, street, city, country, post_code) VALUES '+
+                    '(\'' + req.body['customer'].name+'\', \'' + req.body['customer'].phone_no+'\', \'' + req.body['customer'].email+
+                    '\', \'' + req.body['customer'].street + '\', \''+ req.body['customer'].city + '\', \'' + req.body['customer'].country +
+                    '\', \'' + req.body['customer'].postcode + '\')', function (error, results, fields){
+                        if(error) throw error;
+                });
+            }
+        }).then(res=>{
+            connection.query('SELECT id FROM customers WHERE name=\''+req.body['customer'].name+'\'', function(error,results,fields){
+                if(error) throw error;
+                cust_id = results[0].id;
+            });
+        }).then(res=>{
+            var amount_order = 0;
+            for(var i = 0; i < req.body['order'].length; i++){
+                selectPromise('SELECT id FROM products WHERE name=\''+req.body['order'][i].title+'\'').then(res=>{
+                    connection.query('INSERT INTO orders (amount, customer_key, product_key, state) VALUES ' + 
+                        '(\''+ req.body['order'][amount_order++].amount + '\', \'' + cust_id + '\', \'' + res[0].id + '\', \' Awainting payment\')', 
+                            function(error,results,fields){
+                                if(error) throw error;
+                        }
+                    );
+                });
+            }
+        });
+    }
+    res.send('OK')
+})
+
 /*app.get('/index.html', function(req, res){
     res.sendFile(__dirname+"/index.html");
 });*/
@@ -191,6 +226,14 @@ function queryPromise(str){
                 flag = false;
             }
             resolve(flag);
+        });
+    });
+}
+
+function selectPromise(str){
+    return new Promise((resolve, reject) => {connection.query(str, function (error, results, fields){
+            if(error) throw error;
+            resolve(results);
         });
     });
 }
