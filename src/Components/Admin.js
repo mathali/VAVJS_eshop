@@ -34,6 +34,7 @@ class Admin extends React.Component {
   render() {
     return (
       <div className="admin_div">
+            <hr/><br/>
             <div  className="order_id">
                 <p>{this.state.id}</p>
             </div>

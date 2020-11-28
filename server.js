@@ -218,6 +218,21 @@ var products = [
         cost: '80.0',
         image_src: 'https://live.staticflickr.com/2210/2272200180_bfdf7d6b43_b.jpg'
     },
+    {
+        name: 'Pachinko',
+        cost: '100.0',
+        image_src: 'https://live.staticflickr.com/3060/3250235509_2525167f57_b.jpg'
+    },
+    {
+        name: 'Magpie City',
+        cost: '30.0',
+        image_src: 'https://live.staticflickr.com/153/401319471_590d5b5d54_b.jpg'
+    },
+    {
+        name: 'Piechart man',
+        cost: '40.0',
+        image_src: 'https://live.staticflickr.com/5219/5494178341_1c1a366749.jpg'
+    },
 ];
 
 var strCtr = 'INSERT INTO counter (hit_count) VALUES (\'0\')';

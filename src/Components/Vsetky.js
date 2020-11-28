@@ -253,9 +253,10 @@ class Vsetky extends React.Component  {
                         <img src="https://img.icons8.com/metro/26/000000/home.png"  alt="Home" width='50px' height='50px'/>
                     </div>
                     <div className="cart_btn">
-                        <img src="https://img.icons8.com/ios-filled/50/000000/shopping-basket-2.png" alt="Cart" width='50px' height='50px' padding-left='50px' 
+                        <img src="https://img.icons8.com/ios-filled/50/000000/shopping-basket-2.png" alt="Cart" width='50px' height='50px'
                         onClick={()=>this.getCart()}/>
                     </div>
+                    <hr/>
                     <div>
                         {this.renderProducts()}
                     </div>
@@ -272,8 +273,9 @@ class Vsetky extends React.Component  {
                             })}/>
                     </div>
                     <div className="cart_btn">
-                        <img src="https://img.icons8.com/ios-filled/50/000000/shopping-basket-2.png" alt="Cart" width='50px' height='50px' padding-left='50px'/>
+                        <img src="https://img.icons8.com/ios-filled/50/000000/shopping-basket-2.png" alt="Cart" width='50px' height='50px'/>
                     </div>
+                    <hr/>
                     <div className="item">
                         <div className="item_title">
                             <h2>Item</h2>
@@ -306,11 +308,12 @@ class Vsetky extends React.Component  {
                         })}/>
                     </div>
                     <div className="cart_btn">
-                        <img src="https://img.icons8.com/ios-filled/50/000000/shopping-basket-2.png" alt="Cart" width='50px' height='50px' padding-left='50px'
+                        <img src="https://img.icons8.com/ios-filled/50/000000/shopping-basket-2.png" alt="Cart" width='50px' height='50px'
                             onClick={()=>this.setState({isForm: false})}/>
                     </div>
+                    <hr/>
                     <div className="order_total">
-                        <h3>Total sum: {this.state.sum}€</h3>
+                        <h2>Total price: {this.state.sum}€</h2>
                     </div>
                     <div className="Order_form">{this.renderForm()}</div>
                 </div>
@@ -327,12 +330,13 @@ class Vsetky extends React.Component  {
                         })}/>
                     </div>
                     <div className="cart_btn">
-                        <img src="https://img.icons8.com/ios-filled/50/000000/shopping-basket-2.png" alt="Cart" width='50px' height='50px' padding-left='50px'
+                        <img src="https://img.icons8.com/ios-filled/50/000000/shopping-basket-2.png" alt="Cart" width='50px' height='50px' 
                             onClick={()=>this.setState({
                                 isForm: false,
                                 isThanks: false
                             })}/>
                     </div>
+                    <hr/>
                     <div className="Order_form">{this.renderThankYou()}</div>
                 </div>
             )

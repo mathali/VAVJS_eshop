@@ -28,23 +28,25 @@ class Form extends React.Component {
     return (
       <div className="form_div">
         <form className="form">
-            <label>Name</label><br/>
-            <input type="text" id="name"/><br/>
-            <label>Phone Number</label><br/>
-            <input type="text" id="phone_no"/><br/>
-            <label>Email</label><br/>
-            <input type="text" id="email"/><br/>
-            <label>Street</label><br/>
-            <input type="text" id="street"/><br/>
-            <label>City</label><br/>
-            <input type="text" id="city"/><br/>
-            <label>Country</label><br/>
-            <input type="text" id="country"/><br/>
-            <label>Postcode</label><br/>
-            <input type="text" id="postcode"/><br/>
+            <h2>Personal Information</h2><hr/>
+            <label className='label'>Name</label><br/>
+            <input className='form_text' type="text" id="name"/><br/>
+            <label className='label'>Phone Number</label><br/>
+            <input className='form_text' type="text" id="phone_no"/><br/>
+            <label className='label'>Email</label><br/>
+            <input className='form_text' type="text" id="email"/><br/>
+            <h2>Delivery Information</h2><hr/>
+            <label className='label'>Street</label><br/>
+            <input className='form_text' type="text" id="street"/><br/>
+            <label className='label'>City</label><br/>
+            <input className='form_text' type="text" id="city"/><br/>
+            <label className='label'>Country</label><br/>
+            <input className='form_text' type="text" id="country"/><br/>
+            <label className='label'>Postcode</label><br/>
+            <input className='form_text' type="text" id="postcode"/><br/>
         </form>
         <div className="create_order_btn">
-            <button id="create_btn" onClick={()=>this.createOrder()}>Order</button>
+            <button className="create_btn" id="create_btn" onClick={()=>this.createOrder()}>Order</button>
         </div>
       </div>
     );

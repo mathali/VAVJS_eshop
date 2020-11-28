@@ -12,6 +12,10 @@
   float:left;
 }
 
+.cart_btn{
+  padding-left: 70px;
+}
+
 .item{
   width:100%;
   float:left;
@@ -56,10 +60,46 @@
   float: left;
 }
 
-.form{
+.form_div{
   width: 40%;
   margin-left: auto;
   margin-right: auto;
+}
+
+.form_text{
+  width: 100%;
+}
+
+.form{
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.order_total{
+  text-align: center;
+  width: 40%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.create_btn{  
+    width: 50%;
+    height: 50px;
+    position:relative;
+    left: 25%;
+}
+
+.create_order_btn{
+  width: 40%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 30px;
+}
+
+.label{
+  display:inline-block;
+  margin-top: 15px;
 }
 
 .order_id{
