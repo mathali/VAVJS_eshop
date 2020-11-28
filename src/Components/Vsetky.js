@@ -215,11 +215,34 @@ class Vsetky extends React.Component  {
         if(admin){
             return(
                 <div className='admin_page'>
+                    <div className='refresh'>
+                        <button onClick={()=>this.adminGet()}>Refresh</button>
+                    </div><br/>
                     <div className="hit_count">
-                        <h3>{this.state.hitCount}</h3>
-                    </div>
-                    <button onClick={()=>this.adminGet()}>Get orders</button>
-                    <div>{this.renderAdmin()}</div>
+                        <p>Add click counter: </p> <h2>{this.state.hitCount}</h2>
+                    </div><br/>
+                    <div className="admin_div">
+                        <div className="order_id">
+                            <h2>ID</h2>
+                        </div>
+                        <div className="order_amount">
+                            <h2>Amount</h2>
+                        </div>
+                        <div className="order_cname">
+                            <h2>Customer Name</h2>
+                        </div>
+                        <div className="order_email">
+                            <h2>Customer Email</h2>
+                        </div>
+                        <div className="order_pname">
+                            <h2>Product Name</h2>
+                        </div>
+                        <div className="order_state">
+                            <h2>State</h2>
+                        </div>
+                    </div><br/>
+                    <div>{this.renderAdmin()}</div><br/>
+                    <hr/>
                 </div>
             )
         }

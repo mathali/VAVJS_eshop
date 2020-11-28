@@ -34,18 +34,29 @@ class Admin extends React.Component {
   render() {
     return (
       <div className="admin_div">
-        <p>{this.state.key}</p>
-        <p>{this.state.amount}</p>
-        <p>{this.state.customerName}</p>
-        <p>{this.state.customerEmail}</p>
-        <p>{this.state.productName}</p>
-        <select value={this.state.state} onChange={this.handleChange} name="State" id="dropdown">
-            <option value="Awaiting payment">Awaiting payment</option>
-            <option value="Processing">Processing</option>
-            <option value="Delivered">Delivered</option>
-            <option value="Returned">Returned</option>
-        </select>
-        <hr/>
+            <div  className="order_id">
+                <p>{this.state.id}</p>
+            </div>
+            <div className="order_amount"> 
+                <p>{this.state.amount}</p>
+            </div>
+            <div className="order_cname">
+                <p>{this.state.customerName}</p>
+            </div>
+            <div className="order_email">
+                <p>{this.state.customerEmail}</p>
+            </div>
+            <div  className="order_pname">
+                <p>{this.state.productName}</p>
+            </div>
+            <div  className="order_state" >
+                <select value={this.state.state} onChange={this.handleChange} id="dropdown">
+                    <option value="Awaiting payment">Awaiting payment</option>
+                    <option value="Processing">Processing</option>
+                    <option value="Delivered">Delivered</option>
+                    <option value="Returned">Returned</option>
+                </select>
+            </div>
       </div>
     );
   }
