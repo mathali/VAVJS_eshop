@@ -11,7 +11,7 @@ class Form extends React.Component {
     }
 
   createOrder(){
-    var customer = {
+    var ph = {
         name: document.getElementById("name").value,
         phone_no: document.getElementById("phone_no").value,
         email: document.getElementById("email").value,
@@ -19,7 +19,27 @@ class Form extends React.Component {
         city: document.getElementById("city").value,
         country: document.getElementById("country").value,
         postcode: document.getElementById("postcode").value
+    }
+
+    if(ph.name == "")ph.name="N/A";
+    if(ph.phone_no == "")ph.phone_no=0;
+    if(ph.email == "")ph.email="N/A";
+    if(ph.street == "")ph.street="N/A";
+    if(ph.city == "")ph.city="N/A";
+    if(ph.country == "")ph.country="N/A";
+    if(ph.postcode == "")ph.postcode=0;
+
+    var customer = {
+        name: ph.name,
+        phone_no: ph.phone_no,
+        email: ph.email,
+        street: ph.street,
+        city: ph.city,
+        country: ph.country,
+        postcode: ph.postcode
     };
+
+    console.log(customer);
 
     this.props.createOrder(customer);
   }  

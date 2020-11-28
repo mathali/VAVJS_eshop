@@ -28,10 +28,10 @@ class Thank_you extends React.Component {
     return (
         <div className="thanks_page">
             <div className="thanks_div">
-                <h2>Thanks for your order!</h2>
+                <h1>Thanks for your order!</h1>
             </div>
             <div className="banner_div">
-                    <img src="https://www.fiit.stuba.sk/buxus/assets/images/web/icons/fiit_800.png" alt="FIIT STUBA" onClick={()=>this.loadPage()}/>
+                    <img src="https://www.ucn.sk/files/social/4645/stuFIIT.png" width='600px' height='400px' alt="FIIT STUBA" onClick={()=>this.loadPage()}/>
             </div>
         </div>
     );
