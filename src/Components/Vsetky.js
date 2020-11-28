@@ -219,7 +219,7 @@ class Vsetky extends React.Component  {
                         <button onClick={()=>this.adminGet()}>Refresh</button>
                     </div><br/>
                     <div className="hit_count">
-                        <p>Add click counter: </p> <h2>{this.state.hitCount}</h2>
+                        <p>Ad click counter: </p> <h2>{this.state.hitCount}</h2>
                     </div><br/>
                     <div className="admin_div">
                         <div className="order_id">
