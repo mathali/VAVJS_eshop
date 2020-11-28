@@ -4,6 +4,9 @@ import Product from './Product';
 import Item from './Item';
 import Form from './Form';
 import Thank_you from './Thank_you';
+import Admin from './Admin';
+
+var admin = window.location.hash && window.location.hash.substring(1) == 'admin';
 
 class Vsetky extends React.Component  {
     constructor(props) {
@@ -17,6 +20,9 @@ class Vsetky extends React.Component  {
             isForm: false,
             sum: 0,
             isThanks: false,
+            adminOrders: [],
+            loadedAdmin: false,
+            hitCount: 0,
         };
         this.unmountChild = this.unmountChild.bind(this);
         this.remountChild = this.remountChild.bind(this);
@@ -48,6 +54,22 @@ class Vsetky extends React.Component  {
 
     renderThankYou(){
          return <Thank_you/>
+    }
+
+    renderAdmin(){
+        if(this.state.loadedAdmin){
+            return this.state.adminOrders.map((order,index)=>{
+                return <Admin
+                    key={order.key}
+                    id={order.id}
+                    amount={order.amount}
+                    customerName={order.customerName}
+                    customerEmail={order.customerEmail}
+                    productName={order.productName}
+                    state={order.state}/>
+            });
+        }
+        return null;
     }
 
     getCart(){
@@ -175,10 +197,33 @@ class Vsetky extends React.Component  {
         this.setState({sum: sum});
     }
 
+    adminGet(){
+        fetch('/admin_orders').then(res => res.json())
+            .then(data => {
+                this.setState({
+                    adminOrders: data.result,
+                    hitCount: data.hit_count.hit_count,
+                    loadedAdmin: true,
+                })
+            });
+    }
+
 
     render(){
         if(!this.state.isLoaded)this.getProducts();
-        if(this.state.isLoaded && !this.state.isCart && !this.state.isForm) {
+        if(!this.state.loadedAdmin)this.adminGet();
+        if(admin){
+            return(
+                <div className='admin_page'>
+                    <div className="hit_count">
+                        <h3>{this.state.hitCount}</h3>
+                    </div>
+                    <button onClick={()=>this.adminGet()}>Get orders</button>
+                    <div>{this.renderAdmin()}</div>
+                </div>
+            )
+        }
+        else if(this.state.isLoaded && !this.state.isCart && !this.state.isForm) {
             return (
                 <div className = 'product_page'>
                     <div className="home_btn">

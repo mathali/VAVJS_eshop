@@ -108,20 +108,54 @@ app.post('/create_order', (req,res)=>{
         });
     }
     res.send('OK')
-})
+});
 
-app.post('/update_counter', (res,req)=>{
+app.post('/update_counter', (req,res)=>{
     connection.query('UPDATE counter SET hit_count = hit_count + 1 WHERE id=1', function(error,results,fields){
                 if(error) throw error;
             });
-})
+    res.send('OK');
+});
+
+app.get('/admin_orders', (req,res)=>{
+    var adminQuery = `SELECT 
+                        o.id, 
+                        o.amount,
+                        c.name as 'customerName',
+                        c.email as 'customerEmail',
+                        p.name as 'productName',
+                        o.state as 'state'
+                    FROM \`orders\` o
+                    JOIN \`customers\` c on c.id = o.customer_key
+                    JOIN \`products\` p on p.id = o.product_key`;
+
+    var counterQuery = 'SELECT hit_count FROM counter WHERE id=1';
+
+    res.type('application/json')
+    selectPromise(adminQuery).then(result=>{
+        var res_ph = result;
+        selectPromise(counterQuery).then(hit_count=>{
+            res.send({
+                result: res_ph,
+                hit_count: hit_count[0],
+            });
+        })
+    });
+});
+
+app.post('/update_state', (req, res)=>{
+    connection.query('UPDATE orders SET state = \'' + req.body['state'] + '\' WHERE id=' + req.body['id'], function(error,results,fields){
+                if(error) throw error;
+            });
+    res.send('OK')
+});
 
 var connection = mysql.createConnection({
     host : 'mydb',      // lebo docker
     user : 'root',
     password : 'root',
     database : 'eshop'
-})
+});
 
 connection.connect();
 

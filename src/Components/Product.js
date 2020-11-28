@@ -29,7 +29,7 @@ class Product extends React.Component {
           },
           body: JSON.stringify({title: title}),
           credentials: 'same-origin'
-      })
+      });
   }
 }
 export default Product;
