@@ -6,9 +6,12 @@ import Form from './Form';
 import Thank_you from './Thank_you';
 import Admin from './Admin';
 
+// Access admin interface by putting #admin in the URL
 var admin = window.location.hash && window.location.hash.substring(1) == 'admin';
 
-class Vsetky extends React.Component  {
+
+// Imports and communicates with all child components
+class All extends React.Component  {
     constructor(props) {
         super(props);
         this.state = {
@@ -24,12 +27,14 @@ class Vsetky extends React.Component  {
             loadedAdmin: false,
             hitCount: 0,
         };
+        // Bind functions that are sent to children for event handling
         this.unmountChild = this.unmountChild.bind(this);
         this.remountChild = this.remountChild.bind(this);
         this.updateAmount = this.updateAmount.bind(this);
         this.createOrder = this.createOrder.bind(this);
     }
 
+    // Load products that are rendered on the homepage from the DB
     getProducts(){    
         fetch('/product_data')
             .then(res => res.json())
@@ -41,6 +46,7 @@ class Vsetky extends React.Component  {
             });
     }
 
+    // Display products
     renderProducts() {
         return this.state.products.map((product,index)=>{
             return <Product
@@ -52,10 +58,12 @@ class Vsetky extends React.Component  {
         });
     }
 
+    // Display thank you page
     renderThankYou(){
          return <Thank_you/>
     }
 
+    // Display admin interface
     renderAdmin(){
         if(this.state.loadedAdmin){
             return this.state.adminOrders.map((order,index)=>{
@@ -72,6 +80,7 @@ class Vsetky extends React.Component  {
         return null;
     }
 
+    // Get info about this session's cart data
     getCart(){
         fetch('/cart_data')
             .then(res => res.json())
@@ -90,6 +99,7 @@ class Vsetky extends React.Component  {
             });
     }
 
+    // Submit items to be order and customer information to the server
     createOrder(customer){
         fetch('/create_order',{
           method: 'POST',
@@ -108,10 +118,11 @@ class Vsetky extends React.Component  {
         });
     }
 
+    // Display the shopping cart
     renderItems(){
         if(this.state.items == undefined || this.state.items.length < 1) return null;
         return this.state.items.map((item,index)=>{
-            for(var i = 0; i < this.state.dontRender.length; i++){
+            for(var i = 0; i < this.state.dontRender.length; i++){              // Don't show items the user has removed from their cart
                 if(this.state.dontRender[i] == item.title) return null;
             }
             return <Item
@@ -124,11 +135,13 @@ class Vsetky extends React.Component  {
         });
     }
 
+    // Display order form
     renderForm(){
         return <Form
             createOrder={this.createOrder}/>;
     }
 
+    // Remember which items the user removed from their cart
     unmountChild(title){
         var flag;
         if(this.state.dontRender != undefined){
@@ -145,6 +158,7 @@ class Vsetky extends React.Component  {
         }
     }
 
+    // Change the amount of items the customer wants to order
     updateAmount(title, amount){
         var ph = this.state.items;
         for(var i = 0; i < ph.length; i++){
@@ -156,6 +170,7 @@ class Vsetky extends React.Component  {
         this.setState({items: ph});
     }
 
+    // Display child again if the customer has added it from the homepage again
     remountChild(title){
         if(this.state != undefined && this.state.dontRender != undefined){
             var ph = this.state.dontRender;
@@ -168,6 +183,7 @@ class Vsetky extends React.Component  {
         }
     }
 
+    // Create order based on the current state of the shopping cart
     setOrder(){
         this.setState({isForm: true})
         var ph_order;
@@ -175,7 +191,7 @@ class Vsetky extends React.Component  {
         var sum = 0;
         if(this.state.items != undefined && this.state.items.length > 0){
             ph_order = this.state.items;
-            for(var i = 0; i < this.state.items.length; i++){
+            for(var i = 0; i < this.state.items.length; i++){                   // Don't add hidden items
                 if(this.state.dontRender != undefined){
                     for(var j = 0; j < this.state.dontRender.length; j++){
                         if(this.state.dontRender[j] == this.state.items[i].title){
@@ -197,6 +213,7 @@ class Vsetky extends React.Component  {
         this.setState({sum: sum});
     }
 
+    // Fetch data to be displayed on the admin interface
     adminGet(){
         fetch('/admin_orders').then(res => res.json())
             .then(data => {
@@ -208,7 +225,7 @@ class Vsetky extends React.Component  {
             });
     }
 
-
+    // Decide which page to render
     render(){
         if(!this.state.isLoaded)this.getProducts();
         if(!this.state.loadedAdmin)this.adminGet();
@@ -347,4 +364,4 @@ class Vsetky extends React.Component  {
     }
 }
 
-export default Vsetky;
+export default All;

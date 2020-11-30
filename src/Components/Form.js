@@ -1,15 +1,7 @@
 import React from 'react';
 
+// Web order form
 class Form extends React.Component {
-    constructor(props) {
-        super(props);
-        /*this.state = {
-            title: this.props.title,
-            amount: this.props.amount,
-            cost: this.props.cost,
-        };*/
-    }
-
   createOrder(){
     var ph = {
         name: document.getElementById("name").value,
@@ -21,6 +13,7 @@ class Form extends React.Component {
         postcode: document.getElementById("postcode").value
     }
 
+    // Replace missing values so our DB doesn't crash
     if(ph.name == "")ph.name="N/A";
     if(ph.phone_no == "")ph.phone_no=0;
     if(ph.email == "")ph.email="N/A";
@@ -39,8 +32,7 @@ class Form extends React.Component {
         postcode: ph.postcode
     };
 
-    console.log(customer);
-
+    // Send customer to the database
     this.props.createOrder(customer);
   }  
 

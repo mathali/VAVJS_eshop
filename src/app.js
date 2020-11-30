@@ -2,11 +2,12 @@ import './App.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import Vsetky from './Components/Vsetky';
+import All from './Components/All';
 
+// Handle React rendering
 ReactDOM.render(
     <React.StrictMode>
-        <Vsetky />
+        <All />
     </React.StrictMode>,
     document.getElementById('root')
 );

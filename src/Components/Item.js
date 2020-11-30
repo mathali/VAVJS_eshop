@@ -1,5 +1,7 @@
 import React from 'react';
 
+
+// Shopping cart item representation
 class Item extends React.Component {
     constructor(props) {
         super(props);
@@ -10,6 +12,7 @@ class Item extends React.Component {
         };
     }
 
+  // Decrease the local state used to render and update the order in All.js
   decreaseAmount(){
       if(this.state.amount - 1 < 0) return;
       this.props.updateAmount(this.state.title, this.state.amount-1);
@@ -19,6 +22,7 @@ class Item extends React.Component {
       });
   }
 
+  // Increase the local state used to render and update the order in All.js
   increaseAmount(){
       this.props.updateAmount(this.state.title, this.state.amount+1);
       this.setState({

@@ -1,5 +1,6 @@
 import React from 'react';
 
+// Admin interface
 class Admin extends React.Component {
     constructor(props) {
         super(props);
@@ -15,6 +16,7 @@ class Admin extends React.Component {
         this.handleChange = this.handleChange.bind(this);
     }
 
+    // Detected changed state in dropdown and immediately update the database
     handleChange(event){
         this.setState({state: event.target.value});
         

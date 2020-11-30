@@ -1,5 +1,6 @@
 import React from 'react';
 
+// Homepage product display
 class Product extends React.Component {
   render() {
     return (
@@ -20,6 +21,7 @@ class Product extends React.Component {
     );
   }
 
+  // Add chosen product to the cart of your session
   handleClick(title) {
     this.props.remount(title);
     fetch('/to_cart',{

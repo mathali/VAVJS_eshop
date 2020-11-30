@@ -6,6 +6,14 @@ const app = express();
 const bodyParser = require('body-parser');
 
 
+/*
+
+
+        Express section 
+
+
+*/
+
 app.use(bodyParser.json());
 
 app.use(express.static('public'));
@@ -22,6 +30,7 @@ app.listen(8080, ()=>{
     console.log("[INFO] Listening");
 })
 
+// Data for the home page
 app.get('/product_data', (req, res) =>{
     connection.query('SELECT * FROM products', function (error, results, fields) {
         if (error) throw error;
@@ -29,6 +38,7 @@ app.get('/product_data', (req, res) =>{
     });
 });
 
+// Data for the shopping cart
 app.get('/cart_data', (req, res) =>{
     var output = [];
     if(req.session.items != undefined){
@@ -53,6 +63,7 @@ app.get('/cart_data', (req, res) =>{
     }
 });
 
+// Store title and amount added to cart
 app.post('/to_cart', (req, res)=>{
     var in_cart = false;
     if (req.session.items === undefined) {
@@ -75,10 +86,12 @@ app.post('/to_cart', (req, res)=>{
     res.send('OK');
 });
 
+// Push created order into the DB
 app.post('/create_order', (req,res)=>{
     var cust_id;
     var order_id = [];
     if(req.body['order'] != undefined && req.body['order'].length > 0){
+        // Create a customer profile if it doesn't exist
         queryPromise('SELECT * FROM customers WHERE name=\''+req.body['customer'].name+'\'').then(res=>{
             if(res){
                 connection.query('INSERT INTO customers (name, phone_no, email, street, city, country, post_code) VALUES '+
@@ -88,12 +101,12 @@ app.post('/create_order', (req,res)=>{
                         if(error) throw error;
                 });
             }
-        }).then(res=>{
+        }).then(res=>{              // Get the customers id to be used as a foreign key
             connection.query('SELECT id FROM customers WHERE name=\''+req.body['customer'].name+'\'', function(error,results,fields){
                 if(error) throw error;
                 cust_id = results[0].id;
             });
-        }).then(res=>{
+        }).then(res=>{              // Get the product ids that get used as foreign keys
             var amount_order = 0;
             for(var i = 0; i < req.body['order'].length; i++){
                 selectPromise('SELECT id FROM products WHERE name=\''+req.body['order'][i].title+'\'').then(res=>{
@@ -110,6 +123,7 @@ app.post('/create_order', (req,res)=>{
     res.send('OK')
 });
 
+// Ad clicl counter increment
 app.post('/update_counter', (req,res)=>{
     connection.query('UPDATE counter SET hit_count = hit_count + 1 WHERE id=1', function(error,results,fields){
                 if(error) throw error;
@@ -117,6 +131,8 @@ app.post('/update_counter', (req,res)=>{
     res.send('OK');
 });
 
+
+// Join tables to get the necessary info for the admin interface
 app.get('/admin_orders', (req,res)=>{
     var adminQuery = `SELECT 
                         o.id, 
@@ -143,6 +159,7 @@ app.get('/admin_orders', (req,res)=>{
     });
 });
 
+// Process admin's requests to change order state
 app.post('/update_state', (req, res)=>{
     connection.query('UPDATE orders SET state = \'' + req.body['state'] + '\' WHERE id=' + req.body['id'], function(error,results,fields){
                 if(error) throw error;
@@ -150,15 +167,34 @@ app.post('/update_state', (req, res)=>{
     res.send('OK')
 });
 
+
+/*
+
+
+        End of express section 
+
+
+*/
+
+/*
+
+
+        Mysql section 
+
+
+*/
+
 var connection = mysql.createConnection({
-    host : 'mydb',      // lebo docker
+    host : 'mydb',      
     user : 'root',
     password : 'root',
-    database : 'eshop'
+    database : 'eshop'               // Name of the current database 
 });
 
 connection.connect();
 
+
+// SQL commands that create all needed tables if they don't exist in our database
 var createCustomers = `CREATE TABLE \`customers\` (
                 \`id\` int unsigned NOT NULL AUTO_INCREMENT,
                 \`name\` varchar(255) CHARACTER SET utf8 COLLATE utf8_slovak_ci NOT NULL,
@@ -201,7 +237,7 @@ var createCounter = `CREATE TABLE \`counter\` (
                 PRIMARY KEY (\`id\`)
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovak_ci;`;
 
-//seed
+// Product seed
 var products = [
     {
         name: 'Digital Cherries',
@@ -235,6 +271,8 @@ var products = [
     },
 ];
 
+
+// Mapping of INSERT commands
 var strCtr = 'INSERT INTO counter (hit_count) VALUES (\'0\')';
 var str = 'INSERT INTO products (name, cost, image_src) VALUES ';
 var strProducts = products.map(product => {
@@ -244,10 +282,11 @@ var strProducts = products.map(product => {
 str += strProducts.join(',');
 str += ';';
 
+// Tests that are used to determine which tables exist
 var customersTest = `SELECT *
             FROM information_schema.tables
-            WHERE table_schema = 'eshop'
-            AND table_name = 'customers';`;
+            WHERE table_schema = 'eshop'            
+            AND table_name = 'customers';`;             // Name 'eshop' determined by the connection
 
 var ordersTest = `SELECT *
             FROM information_schema.tables
@@ -266,6 +305,8 @@ var counterTest = `SELECT *
 
 var tableTest = [false, false, false];
 
+
+// Support function used in places where we need to wait for a command to finish - checks if the command returns something
 function queryPromise(str){
     return new Promise((resolve, reject) => {connection.query(str, function (error, results, fields){
             var flag;
@@ -281,6 +322,7 @@ function queryPromise(str){
     });
 }
 
+// Return the contents of the command response
 function selectPromise(str){
     return new Promise((resolve, reject) => {connection.query(str, function (error, results, fields){
             if(error) throw error;
@@ -289,6 +331,7 @@ function selectPromise(str){
     });
 }
 
+// Test the database if it has the necessary structure, create anything that's missing
 queryPromise(customersTest).then(res =>{
     if(res){
         connection.query(createCustomers, function (error, results, fields){
@@ -313,7 +356,7 @@ queryPromise(customersTest).then(res =>{
                 queryPromise(strCtr);
             };
     }).then(res=>{
-        //connection.end();     //TODO: figure out where to place it
+        //connection.end();     
         });
     }) 
     
@@ -332,6 +375,11 @@ queryPromise(customersTest).then(res =>{
         });
     }
 })})
-   
- 
-// treba vycistit docker, vsetko premazat, pozriet command
+
+/*
+
+
+        End of mysql section 
+
+
+*/

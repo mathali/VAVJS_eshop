@@ -1,15 +1,8 @@
 import React from 'react';
 
-class Thank_you extends React.Component {
-    constructor(props) {
-        super(props);
-        /*this.state = {
-            title: this.props.title,
-            amount: this.props.amount,
-            cost: this.props.cost,
-        };*/
-    } 
 
+// After order thank you page
+class Thank_you extends React.Component {
     loadPage(){
         fetch('/update_counter',{
           method: 'POST',
