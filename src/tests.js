@@ -149,7 +149,7 @@ describe('Server tests', function() {
                 })
                 .then(res => res.json())
                 .then(data=>{
-                    console.log(order_id);
+                    order_id = data.result[0].id;
                     assert.notStrictEqual(data.result, undefined);
             });
         });
