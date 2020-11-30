@@ -18,6 +18,8 @@ services:
     environment: 
       MYSQL_ROOT_PASSWORD: root
     container_name: mydb
+    ports:
+      - "3306:3306"
     expose: 
       - 3306
 

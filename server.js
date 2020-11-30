@@ -83,13 +83,14 @@ app.post('/to_cart', (req, res)=>{
             amount: 1,
         });
     }
-    res.send('OK');
+    res.json(req.session.items);
 });
 
 // Push created order into the DB
 app.post('/create_order', (req,res)=>{
+    var response = res;
     var cust_id;
-    var order_id = [];
+    var success = false;
     if(req.body['order'] != undefined && req.body['order'].length > 0){
         // Create a customer profile if it doesn't exist
         queryPromise('SELECT * FROM customers WHERE name=\''+req.body['customer'].name+'\'').then(res=>{
@@ -108,19 +109,23 @@ app.post('/create_order', (req,res)=>{
             });
         }).then(res=>{              // Get the product ids that get used as foreign keys
             var amount_order = 0;
+            success = true;
             for(var i = 0; i < req.body['order'].length; i++){
                 selectPromise('SELECT id FROM products WHERE name=\''+req.body['order'][i].title+'\'').then(res=>{
                     connection.query('INSERT INTO orders (amount, customer_key, product_key, state) VALUES ' + 
                         '(\''+ req.body['order'][amount_order++].amount + '\', \'' + cust_id + '\', \'' + res[0].id + '\', \' Awaiting payment\')', 
                             function(error,results,fields){
                                 if(error) throw error;
+                                sucess=true;
                         }
                     );
                 });
             }
+            response.json(success);
         });
+    }else{
+        response.json(success);
     }
-    res.send('OK')
 });
 
 // Ad clicl counter increment
@@ -163,8 +168,8 @@ app.get('/admin_orders', (req,res)=>{
 app.post('/update_state', (req, res)=>{
     connection.query('UPDATE orders SET state = \'' + req.body['state'] + '\' WHERE id=' + req.body['id'], function(error,results,fields){
                 if(error) throw error;
+                res.json(results.changedRows);
             });
-    res.send('OK')
 });
 
 
