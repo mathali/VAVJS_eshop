@@ -1,3 +1,4 @@
+// Matej Halinkovic
 import React from 'react';
 
 // Admin interface

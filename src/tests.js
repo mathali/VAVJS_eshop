@@ -1,3 +1,4 @@
+// Matej Halinkovic
 var assert = require('assert');
 const nodeFetch = require('node-fetch')
 const fetch = require('fetch-cookie')(nodeFetch)
@@ -149,7 +150,8 @@ describe('Server tests', function() {
                 })
                 .then(res => res.json())
                 .then(data=>{
-                    order_id = data.result[0].id;
+                    if(data.result[0] == undefined) order_id = 1;
+                    else order_id = data.result[0].id;
                     assert.notStrictEqual(data.result, undefined);
             });
         });

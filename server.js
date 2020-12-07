@@ -1,3 +1,4 @@
+// Matej Halinkovic
 const mysql = require('mysql');
 const express = require('express');
 const session = require('express-session');
@@ -25,10 +26,6 @@ var sessionParser = require('express-session')({
 });
 app.use(cookieParser('your secret here'));
 app.use(session(sessionParser));
-
-app.listen(8080, ()=>{
-    console.log("[INFO] Listening");
-})
 
 // Data for the home page
 app.get('/product_data', (req, res) =>{
@@ -189,17 +186,40 @@ app.post('/update_state', (req, res)=>{
 
 */
 
-var connection = mysql.createConnection({
-    host : 'mydb',      
-    user : 'root',
-    password : 'root',
-    database : 'eshop'               // Name of the current database 
+var connection
+const connect = async function(callback){
+    connection = mysql.createConnection({
+        host : 'mydb',      
+        user : 'root',
+        password : 'root',
+        //database : 'eshop'               // Name of the current database 
+    });
+    connection.connect(err => {
+        if(err){
+            console.log("[INFO] Database not available:");
+            console.log(err);
+            connection.end(err=>{console.log(err)});
+            setTimeout(()=>{
+                connect(callback)
+            }, 5000);
+        }else {
+            callback();
+        }
+    });
+}
+
+connect(()=>{
+    app.listen(8080, ()=>{
+        console.log("[INFO] Listening");
+    });
+    validateDB();
 });
 
-connection.connect();
 
+var createDatabase = `CREATE DATABASE IF NOT EXISTS \`eshop\` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_slovak_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;`
 
 // SQL commands that create all needed tables if they don't exist in our database
+
 var createCustomers = `CREATE TABLE \`customers\` (
                 \`id\` int unsigned NOT NULL AUTO_INCREMENT,
                 \`name\` varchar(255) CHARACTER SET utf8 COLLATE utf8_slovak_ci NOT NULL,
@@ -287,6 +307,8 @@ var strProducts = products.map(product => {
 str += strProducts.join(',');
 str += ';';
 
+var databaseTest = "SELECT * FROM information_schema.SCHEMATA WHERE SCHEMA_NAME = 'eshop'";
+
 // Tests that are used to determine which tables exist
 var customersTest = `SELECT *
             FROM information_schema.tables
@@ -336,51 +358,60 @@ function selectPromise(str){
     });
 }
 
-// Test the database if it has the necessary structure, create anything that's missing
-queryPromise(customersTest).then(res =>{
-    if(res){
-        connection.query(createCustomers, function (error, results, fields){
-            if(error) throw error;
+function validateDB(){
+    // Test the database if it has the necessary structure, create anything that's missing
+    queryPromise(createDatabase).then(res=>{
+        connection.changeUser({database : 'eshop'}, function(err) {
+            if (err) throw err;
         });
-    }
- })
-.then(res => {queryPromise(productsTest).then(res =>{
-    if(res){
-        connection.query(createProducts, function (error, results, fields){
-            if(error) throw error;
-        });
-    }
-}).then(res => {
-    queryPromise('SELECT * FROM products').then(res =>{
-        if(res){
-            queryPromise(str);
-        };
-    }).then(res => {
-        queryPromise('SELECT * FROM counter').then(res =>{
+        
+    })
+    .then(res=>{
+        queryPromise(customersTest).then(res =>{
             if(res){
-                queryPromise(strCtr);
+                connection.query(createCustomers, function (error, results, fields){
+                    if(error) throw error;
+                });
+            }
+        })
+    })
+    .then(res => {queryPromise(productsTest).then(res =>{
+        if(res){
+            connection.query(createProducts, function (error, results, fields){
+                if(error) throw error;
+            });
+        }
+    }).then(res => {
+        queryPromise('SELECT * FROM products').then(res =>{
+            if(res){
+                queryPromise(str);
             };
-    }).then(res=>{
-        //connection.end();     
-        });
-    }) 
-    
-})})
-.then(res => {queryPromise(ordersTest).then(res =>{
-    if(res){
-        connection.query(createOrders, function (error, results, fields){
-            if(error) throw error;
-        });
-    }
-})})
-.then(res => {queryPromise(counterTest).then(res =>{
-    if(res){
-        connection.query(createCounter, function (error, results, fields){
-            if(error) throw error;
-        });
-    }
-})})
-
+        }).then(res => {
+            queryPromise('SELECT * FROM counter').then(res =>{
+                if(res){
+                    queryPromise(strCtr);
+                };
+        }).then(res=>{
+            //connection.end();     
+            });
+        }) 
+        
+    })})
+    .then(res => {queryPromise(ordersTest).then(res =>{
+        if(res){
+            connection.query(createOrders, function (error, results, fields){
+                if(error) throw error;
+            });
+        }
+    })})
+    .then(res => {queryPromise(counterTest).then(res =>{
+        if(res){
+            connection.query(createCounter, function (error, results, fields){
+                if(error) throw error;
+            });
+        }
+    })})
+}
 /*
 
 

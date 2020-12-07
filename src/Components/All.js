@@ -1,3 +1,4 @@
+// Matej Halinkovic
 import React, { useEffect, useState } from 'react';
 
 import Product from './Product';
