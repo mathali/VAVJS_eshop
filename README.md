@@ -1,8 +1,14 @@
 # VAVJS Project 3 - Eshop
+## Image Sources
+Products: https://ccsearch-dev.creativecommons.org/  
+Add banner: fiit.stuba.sk  
 ## Access 
 Adminer port: 8080 (http://localhost:8080/)  
 Eshop port: 8085 (http://localhost:8085)  
 Admin interface: #admin (http://localhost:8085/#admin) - page needs to be refreshed  
+## Tests  
+npm test
+required local modules: mocha, node-fetch, fetch-cookie
 ## Database
 Port: 3306  
 Host: mydb  

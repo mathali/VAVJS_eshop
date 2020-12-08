@@ -198,7 +198,6 @@ const connect = async function(callback){
         if(err){
             console.log("[INFO] Database not available:");
             console.log(err);
-            connection.end(err=>{console.log(err)});
             setTimeout(()=>{
                 connect(callback)
             }, 5000);
